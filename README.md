@@ -6,14 +6,23 @@ The AI-Based Heart Screening System is a non-invasive, intelligent web applicati
 It leverages advanced deep learning and audio signal processing techniques to provide fast, accurate, and interpretable screening results.
 
 🚀 Key Features
+
 🔍 Dual-Modal Analysis – Combines ECG (electrical signals) and PCG (heart sounds)
+
 🧠 AI-Powered Detection – Uses deep learning models for classification
+
 📊 Interactive Dashboard – Visualizes waveforms and results clearly
+
 ⚡ Fast Screening – Real-time or near real-time predictions
+
 📈 Confidence Scores – Displays prediction reliability
+
 🩺 Medical Insights – Provides understandable explanations
+
 🫀 ECG Analysis Module
+
 Processes time-series ECG signals using a 1D Convolutional Neural Network (CNN)
+
 Identifies key waveform components:
 P wave
 QRS complex
