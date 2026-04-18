@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered cardiac screening tool that analyzes ECG and PCG signals to detect heart abnormalities using deep learning.">
+    <title>CardioAI — AI Heart Screening</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===============================
+     NAVBAR
+================================ -->
+<nav class="navbar">
+    <a href="index.html" class="navbar-logo">
+        <span class="logo-dot"></span>
+        CardioAI
+    </a>
+    <ul class="navbar-links">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+    </ul>
+    <button class="primary-btn" onclick="openUploadModal()" style="margin-top:0; padding: 10px 22px; font-size: 14px;">
+        &#9829; Start Analysis
+    </button>
+</nav>
+
+<!-- ===============================
+     HERO SECTION
+================================ -->
+<section class="hero-section">
+    <div class="hero-text">
+        <div class="hero-badge">
+            <span class="dot"></span>
+            AI-Powered Cardiac Screening
+        </div>
+        <h1>Detect Heart Conditions with AI</h1>
+        <p>
+            Upload ECG and PCG signals to get instant AI-driven analysis of potential 
+            cardiac abnormalities — arrhythmia, atrial fibrillation, and more.
+        </p>
+        <button class="primary-btn" onclick="openUploadModal()">
+            &#128190; Upload & Analyze
+        </button>
+    </div>
+
+    <div class="hero-image">
+        <svg width="460" height="280" viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+            <!-- Glow filter -->
+            <defs>
+                <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#0080ff;stop-opacity:0.6"/>
+                    <stop offset="100%" style="stop-color:#00e5ff;stop-opacity:0.3"/>
+                </linearGradient>
+            </defs>
+
+            <!-- Heart Shape -->
+            <path d="M230 260
+                     C230 260, 70 160, 70 90
+                     C70 40, 130 30, 170 60
+                     C200 80, 230 110, 230 110
+                     C230 110, 260 80, 290 60
+                     C330 30, 390 40, 390 90
+                     C390 160, 230 260, 230 260Z"
+                  fill="url(#heartGrad)"
+                  stroke="rgba(0,229,255,0.5)"
+                  stroke-width="1.5"
+                  filter="url(#glow)"/>
+
+            <!-- Animated ECG Line -->
+            <polyline class="ecg-animated"
+                points="20,160 60,160 80,130 100,200 125,140 150,160 178,160
+                        198,100 218,240 240,160 265,160 300,160 340,160 380,160 440,160"
+                fill="none"
+                stroke="#00e5ff"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                filter="url(#glow)"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ===============================
+     FEATURES SECTION
+================================ -->
+<section class="features" id="features">
+    <div class="feature-card">
+        <span class="feature-icon">&#9889;</span>
+        <h3>ECG + PCG Fusion</h3>
+        <p>
+            Combines electrical and acoustic heart signals to dramatically improve
+            screening accuracy over single-signal analysis.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <span class="feature-icon">&#129504;</span>
+        <h3>AI-Powered Analysis</h3>
+        <p>
+            Deep learning CNN models trained on the MIT-BIH dataset automatically
+            detect complex cardiac disease patterns.
+        </p>
+    </div>
+
+    <div class="feature-card">
+        <span class="feature-icon">&#128200;</span>
+        <h3>Instant Results</h3>
+        <p>
+            Get a detailed clinical summary, waveform visualizations, and 
+            abnormality classification in seconds.
+        </p>
+    </div>
+</section>
+
+<!-- ===============================
+     HOW IT WORKS
+================================ -->
+<section class="how-it-works" id="how-it-works">
+    <p class="section-label">Workflow</p>
+    <h2>How the System Works</h2>
+
+    <div class="steps">
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h4>Upload Signals</h4>
+            <p>Upload your ECG (.csv/.txt) and PCG (.wav) files from medical recording devices.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h4>AI Analysis</h4>
+            <p>The AI preprocesses and analyzes both signals simultaneously using trained CNN models.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h4>Detection</h4>
+            <p>Arrhythmia, atrial fibrillation, myocardial infarction, and other conditions are identified.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <h4>View Results</h4>
+            <p>Get a full diagnostic dashboard with waveforms, classification, and clinical indicators.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===============================
+     CTA SECTION
+================================ -->
+<section class="cta">
+    <h2>Start Your Heart Analysis</h2>
+    <p>Upload your cardiac signals and get AI-based insights in seconds.</p>
+    <button class="primary-btn" onclick="openUploadModal()">
+        &#9829; Get Started Now
+    </button>
+</section>
+
+<!-- ===============================
+     UPLOAD MODAL
+================================ -->
+<div id="uploadModal" class="overlay">
+    <div class="modal-box">
+        <button class="close-btn" onclick="closeUploadModal()">&#10005;</button>
+
+        <h3>&#128190; Upload Cardiac Signals</h3>
+
+        <form id="uploadForm">
+            <label>ECG File &nbsp;<span style="color:#00e5ff">(.csv / .txt)</span></label>
+            <input type="file" id="ecgFile" accept=".csv,.txt" required />
+
+            <label>PCG File &nbsp;<span style="color:#00e5ff">(.wav)</span></label>
+            <input type="file" id="pcgFile" accept=".wav" required />
+
+            <button type="submit" class="primary-btn" id="analyzeBtn" style="width:100%;justify-content:center;margin-top:8px;">
+                &#9889; Analyze
+            </button>
+        </form>
+
+        <div id="statusMsg" style="display:none;margin-top:14px;"></div>
+
+        <p class="note">* Screening-level analysis only. Not a substitute for medical diagnosis.</p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

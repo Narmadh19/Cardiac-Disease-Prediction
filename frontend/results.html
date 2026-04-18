@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CardioAI medical diagnostic dashboard — detailed ECG and PCG analysis results with clinical interpretation.">
+    <title>CardioAI — Diagnostic Report</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="results-body">
+
+<!-- ===============================
+     TOP HEADER BAR
+================================ -->
+<header class="rpt-header">
+    <div class="rpt-header-left">
+        <a href="index.html" class="navbar-logo">
+            <span class="logo-dot"></span>
+            CardioAI
+        </a>
+        <span class="rpt-divider">|</span>
+        <span class="rpt-subtitle">Diagnostic Report</span>
+    </div>
+    <div class="rpt-header-right">
+        <div class="rpt-timestamp" id="rptTimestamp">—</div>
+        <a href="index.html" class="back-btn">&#8592; New Analysis</a>
+        <button class="print-btn" onclick="window.print()">🖨 Print Report</button>
+    </div>
+</header>
+
+<!-- ===============================
+     PATIENT / REPORT META STRIP
+================================ -->
+<div class="rpt-meta-strip">
+    <div class="rpt-meta-item">
+        <span class="rpt-meta-label">Report ID</span>
+        <span class="rpt-meta-value" id="reportId">—</span>
+    </div>
+    <div class="rpt-meta-item">
+        <span class="rpt-meta-label">Signal Type</span>
+        <span class="rpt-meta-value">ECG + PCG</span>
+    </div>
+    <div class="rpt-meta-item">
+        <span class="rpt-meta-label">Analysis Model</span>
+        <span class="rpt-meta-value">CNN v2.1</span>
+    </div>
+    <div class="rpt-meta-item">
+        <span class="rpt-meta-label">Status</span>
+        <span class="rpt-meta-value rpt-status-ok" id="reportStatus">Complete</span>
+    </div>
+</div>
+
+<!-- ===============================
+     MAIN DASHBOARD GRID
+================================ -->
+<main class="rpt-dashboard">
+
+    <!-- ── COLUMN 1: WAVEFORMS ── -->
+    <section class="rpt-col rpt-col-wide">
+
+        <!-- ECG WAVEFORM CARD -->
+        <div class="rpt-card" id="ecgWaveformCard">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title">
+                    <span class="rpt-icon ecg-icon">⚡</span>
+                    ECG Waveform Analysis
+                </div>
+                <div class="rpt-card-badge" id="ecgBadge">—</div>
+            </div>
+            <div class="rpt-waveform-wrap">
+                <canvas id="ecgCanvas"></canvas>
+            </div>
+            <div class="rpt-waveform-legend">
+                <span class="legend-item legend-normal">● Normal</span>
+                <span class="legend-item legend-abnormal">● Abnormal</span>
+                <span class="legend-item legend-rpeak">▲ R-Peak</span>
+                <span class="legend-item legend-highlight">■ Highlighted Region</span>
+            </div>
+            <div class="rpt-waveform-labels">
+                <span>P</span><span>QRS</span><span>ST</span><span>T</span>
+            </div>
+        </div>
+
+        <!-- PCG WAVEFORM CARD -->
+        <div class="rpt-card" id="pcgWaveformCard">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title">
+                    <span class="rpt-icon pcg-icon">🫀</span>
+                    PCG Heart Sound Waveform
+                </div>
+                <div class="rpt-card-badge" id="pcgBadge">—</div>
+            </div>
+            <div class="rpt-waveform-wrap">
+                <canvas id="pcgCanvas"></canvas>
+            </div>
+            <div class="rpt-waveform-legend">
+                <span class="legend-item legend-normal">● S1 / S2</span>
+                <span class="legend-item legend-abnormal">● Murmur / Abnormality</span>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── COLUMN 2: FINDINGS ── -->
+    <section class="rpt-col rpt-col-narrow">
+
+        <!-- OVERALL RISK CARD -->
+        <div class="rpt-card rpt-risk-card" id="riskCard">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title">
+                    <span class="rpt-icon">🚨</span> Risk Assessment
+                </div>
+            </div>
+            <div class="rpt-risk-meter">
+                <div class="risk-dial" id="riskDial">
+                    <svg viewBox="0 0 120 70" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="riskGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#00c853"/>
+                                <stop offset="50%" stop-color="#ffb300"/>
+                                <stop offset="100%" stop-color="#d32f2f"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Track arc -->
+                        <path d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="10" stroke-linecap="round"/>
+                        <!-- Colored arc -->
+                        <path id="riskArc" d="M10,65 A50,50 0 0,1 110,65" fill="none" stroke="url(#riskGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157"/>
+                        <!-- Needle -->
+                        <line id="riskNeedle" x1="60" y1="65" x2="60" y2="22" stroke="white" stroke-width="2.5" stroke-linecap="round" transform="rotate(-90 60 65)"/>
+                        <!-- Center dot -->
+                        <circle cx="60" cy="65" r="4" fill="white"/>
+                    </svg>
+                </div>
+                <div class="risk-label-wrap">
+                    <span class="risk-label" id="riskLabel">—</span>
+                    <span class="risk-sublabel" id="riskSublabel">Calculating...</span>
+                </div>
+            </div>
+            <div class="risk-confidence-row">
+                <span class="rcr-label">Model Confidence</span>
+                <div class="rcr-bar-wrap">
+                    <div class="rcr-bar" id="confidenceBar"></div>
+                </div>
+                <span class="rcr-value" id="confidenceValue">—</span>
+            </div>
+            <p class="risk-note" id="riskNote">—</p>
+        </div>
+
+        <!-- ECG FINDINGS CARD -->
+        <div class="rpt-card">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title"><span class="rpt-icon">📈</span> ECG Findings</div>
+            </div>
+            <div class="rpt-findings-grid">
+                <div class="finding-row" id="fr-pwave">
+                    <div class="finding-label">P Wave</div>
+                    <div class="finding-chip" id="chip-pwave">—</div>
+                </div>
+                <div class="finding-row" id="fr-qrs">
+                    <div class="finding-label">QRS Complex</div>
+                    <div class="finding-chip" id="chip-qrs">—</div>
+                </div>
+                <div class="finding-row" id="fr-st">
+                    <div class="finding-label">ST Segment</div>
+                    <div class="finding-chip" id="chip-st">—</div>
+                </div>
+                <div class="finding-row" id="fr-twave">
+                    <div class="finding-label">T Wave</div>
+                    <div class="finding-chip" id="chip-twave">—</div>
+                </div>
+                <div class="finding-row" id="fr-rr">
+                    <div class="finding-label">R-R Interval</div>
+                    <div class="finding-chip" id="chip-rr">—</div>
+                </div>
+            </div>
+            <div class="rpt-ecg-conclusion" id="ecgConclusion">
+                <!-- filled by JS -->
+            </div>
+        </div>
+
+        <!-- PCG FINDINGS CARD -->
+        <div class="rpt-card">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title"><span class="rpt-icon">🔊</span> PCG Findings</div>
+            </div>
+            <div class="rpt-findings-grid">
+                <div class="finding-row">
+                    <div class="finding-label">S1 Sound</div>
+                    <div class="finding-chip" id="chip-s1">—</div>
+                </div>
+                <div class="finding-row">
+                    <div class="finding-label">S2 Sound</div>
+                    <div class="finding-chip" id="chip-s2">—</div>
+                </div>
+                <div class="finding-row">
+                    <div class="finding-label">Murmur</div>
+                    <div class="finding-chip" id="chip-murmur">—</div>
+                </div>
+                <div class="finding-row">
+                    <div class="finding-label">Rhythm</div>
+                    <div class="finding-chip" id="chip-pcgrhythm">—</div>
+                </div>
+            </div>
+            <div class="rpt-ecg-conclusion" id="pcgConclusion">
+                <!-- filled by JS -->
+            </div>
+        </div>
+
+    </section>
+
+    <!-- ── FULL-WIDTH ROW: CLINICAL + SUMMARY ── -->
+    <section class="rpt-col rpt-col-full">
+
+        <!-- CLINICAL EXPLANATION PANEL -->
+        <div class="rpt-card rpt-clinical-card">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title"><span class="rpt-icon">🧬</span> Clinical Explanation</div>
+                <span class="rpt-ai-badge">AI Generated</span>
+            </div>
+            <div class="clinical-grid">
+                <div class="clinical-block" id="clinicalECGBlock">
+                    <div class="clinical-block-title">ECG Interpretation</div>
+                    <p id="clinicalECGText">—</p>
+                    <ul class="clinical-indicators" id="clinicalECGIndicators"></ul>
+                </div>
+                <div class="clinical-block" id="clinicalPCGBlock">
+                    <div class="clinical-block-title">PCG Interpretation</div>
+                    <p id="clinicalPCGText">—</p>
+                    <ul class="clinical-indicators" id="clinicalPCGIndicators"></ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- FINAL SUMMARY CARD (Doctor Style) -->
+        <div class="rpt-card rpt-summary-card" id="finalSummaryCard">
+            <div class="rpt-card-header">
+                <div class="rpt-card-title"><span class="rpt-icon">📋</span> AI Screening Summary</div>
+                <span class="rpt-disclaimer">For clinical reference only. Not a substitute for medical diagnosis.</span>
+            </div>
+            <div class="summary-body">
+                <div class="summary-icon-ring" id="summaryIconRing">♥</div>
+                <div class="summary-text-block">
+                    <h2 class="summary-condition" id="summaryCondition">—</h2>
+                    <p class="summary-paragraph" id="summaryParagraph">—</p>
+                    <div class="summary-tags" id="summaryTags"></div>
+                </div>
+                <div class="summary-risk-badge" id="summaryRiskBadge">
+                    <span class="srb-label">Overall Risk</span>
+                    <span class="srb-value" id="srb-value">—</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<!-- ===============================
+     FOOTER
+================================ -->
+<footer class="rpt-footer">
+    <span>CardioAI Diagnostic System &copy; 2025</span>
+    <span>CNN-based ECG + PCG dual-signal analysis</span>
+    <span>AI screening only — consult a cardiologist for diagnosis</span>
+</footer>
+
+<script src="results.js"></script>
+</body>
+</html>
